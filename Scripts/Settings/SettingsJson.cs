@@ -1,7 +1,5 @@
-﻿using System.Reflection;
-using UnityEngine;
+﻿using UnityEngine;
 using Newtonsoft.Json;
-using Common;
 
 namespace Common
 {
@@ -35,8 +33,10 @@ namespace Common
                     return _jsonSerializer;
                 else
                 {
-                    _jsonSerializer = new JsonSerializer();
-                    _jsonSerializer.Formatting = Formatting.Indented;
+                    _jsonSerializer = new JsonSerializer
+                    {
+                        Formatting = Formatting.Indented
+                    };
                     _jsonSerializer.Converters.Add(new ColorJsonConverter());
                     _jsonSerializer.Converters.Add(new Matrix4x4JsonConverter());
                     _jsonSerializer.Converters.Add(new Vector2JsonConverter());
@@ -102,7 +102,7 @@ namespace Common
             }
             catch (System.IO.FileNotFoundException exception)
             {
-                _.LogException(exception, MethodBase.GetCurrentMethod());
+                Debug.LogException(exception);
                 rtrnDictionary = new DictionaryObject();
                 SerializeDicitionary(rtrnDictionary, filename);
             }
@@ -125,9 +125,8 @@ namespace Common
             }
             catch (System.Exception exception)
             {
-                _.LogException(exception, MethodBase.GetCurrentMethod());
+                Debug.LogException(exception);
             }
         }
-
-    }
+    } // class
 }
