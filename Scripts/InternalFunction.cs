@@ -183,5 +183,5 @@ namespace Common
             return component;
         }
 
-    }
+    } // class
 }
