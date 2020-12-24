@@ -13,14 +13,14 @@ namespace Common
 			if (reader.TokenType == JsonToken.StartObject)
 			{
 				JObject item = JObject.Load(reader);
-				StringBuilder str = new StringBuilder(5); 
+				StringBuilder str = new StringBuilder(5);
 				for (int iy = 0; iy < 4; ++iy)
 				{
 					for (int ix = 0; ix < 4; ++ix)
 					{
 						str.Append($"m{iy}{ix}");
 						JToken value;
-						if(item.TryGetValue(str.ToString(), out value))
+						if (item.TryGetValue(str.ToString(), out value))
 						{
 							existingValue[iy, ix] = value.Value<float>();
 						}

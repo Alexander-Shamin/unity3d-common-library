@@ -33,86 +33,86 @@ public class DontDestroyOnLoadDisable : IDontDestroyOnLoad { }
 
 
 public class Singelton<T, U> : MonoBehaviour
-    where T : Singelton<T, U>
-    where U : IDontDestroyOnLoad
+		where T : Singelton<T, U>
+		where U : IDontDestroyOnLoad
 {
 
-    private static T instance = null;
+	private static T instance = null;
 
-    private bool alive = true;
+	private bool alive = true;
 
-    public static T Instance
-    {
-        get
-        {
-            if (instance != null)
-            {
-                return instance;
-            }
-            else
-            {
-                //Find T
-                T[] managers = GameObject.FindObjectsOfType<T>();
-                if (managers != null)
-                {
-                    if (managers.Length == 1)
-                    {
-                        instance = managers[0];
-                        if(typeof(U) == typeof(DontDestroyOnLoadEnable))
-                            DontDestroyOnLoad(instance);
-                        return instance;
-                    }
-                    else
-                    {
-                        if (managers.Length > 1)
-                        {
-                            Debug.LogError($"Have more that one {typeof(T).Name} in scene. " +
-                                            "But this is Singelton! CheckNull project.");
-                            for (int i = 0; i < managers.Length; ++i)
-                            {
-                                T manager = managers[i];
-                                Destroy(manager.gameObject);
-                            }
-                        }
-                    }
-                }
-                //create 
-                GameObject go = new GameObject(typeof(T).Name, typeof(T));
-                instance = go.GetComponent<T>();
+	public static T Instance
+	{
+		get
+		{
+			if (instance != null)
+			{
+				return instance;
+			}
+			else
+			{
+				//Find T
+				T[] managers = GameObject.FindObjectsOfType<T>();
+				if (managers != null)
+				{
+					if (managers.Length == 1)
+					{
+						instance = managers[0];
+						if (typeof(U) == typeof(DontDestroyOnLoadEnable))
+							DontDestroyOnLoad(instance);
+						return instance;
+					}
+					else
+					{
+						if (managers.Length > 1)
+						{
+							Debug.LogError($"Have more that one {typeof(T).Name} in scene. " +
+															"But this is Singelton! CheckNull project.");
+							for (int i = 0; i < managers.Length; ++i)
+							{
+								T manager = managers[i];
+								Destroy(manager.gameObject);
+							}
+						}
+					}
+				}
+				//create 
+				GameObject go = new GameObject(typeof(T).Name, typeof(T));
+				instance = go.GetComponent<T>();
 				instance.Initialization();
-                if(typeof(U) == typeof(DontDestroyOnLoadEnable))
-                    DontDestroyOnLoad(instance.gameObject);
-                return instance;
-            }
-        }
+				if (typeof(U) == typeof(DontDestroyOnLoadEnable))
+					DontDestroyOnLoad(instance.gameObject);
+				return instance;
+			}
+		}
 
-        //Can be initialized externally
-        set
-        {
-            instance = value as T;
-        }
-    }
+		//Can be initialized externally
+		set
+		{
+			instance = value as T;
+		}
+	}
 
-    /// <summary>
-    /// CheckNull flag if need work from OnDestroy or OnApplicationExit
-    /// </summary>
-    public static bool IsAlive
-    {
-        get
-        {
-            if (instance == null)
-                return false;
-            return instance.alive;
-        }
-    }
+	/// <summary>
+	/// CheckNull flag if need work from OnDestroy or OnApplicationExit
+	/// </summary>
+	public static bool IsAlive
+	{
+		get
+		{
+			if (instance == null)
+				return false;
+			return instance.alive;
+		}
+	}
 
 
 	protected void Awake()
 	{
 		if (instance == null)
 		{
-            if(typeof(U) == typeof(DontDestroyOnLoadEnable))
-                DontDestroyOnLoad(gameObject);
+			if (typeof(U) == typeof(DontDestroyOnLoadEnable))
+				DontDestroyOnLoad(gameObject);
 			instance = this as T;
 			Initialization();
 		}
@@ -120,13 +120,13 @@ public class Singelton<T, U> : MonoBehaviour
 		{
 			Debug.LogError($"Have more that one {typeof(T).Name} in scene. " +
 							"But this is Singelton! Check project.");
-		    DestroyImmediate(this);
+			DestroyImmediate(this);
 		}
 	}
 
-    protected void OnDestroy() { alive = false; }
+	protected void OnDestroy() { alive = false; }
 
-    protected void OnApplicationQuit() { alive = false; }
+	protected void OnApplicationQuit() { alive = false; }
 
 	protected virtual void Initialization() { }
 }

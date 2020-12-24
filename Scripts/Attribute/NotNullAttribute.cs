@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace Common
 {
-    [AttributeUsage(AttributeTargets.Field)]
-    public class NotNullAttribute : PropertyAttribute
-    {
-        public bool IgnorePrefab { get; set; }
-    }
+	[AttributeUsage(AttributeTargets.Field)]
+	public class NotNullAttribute : PropertyAttribute
+	{
+		public bool IgnorePrefab { get; set; }
+	}
 }

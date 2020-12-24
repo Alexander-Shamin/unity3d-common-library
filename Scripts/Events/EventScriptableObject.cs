@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace Common
 {
-    /// <summary>
-    /// Abstract class event with ScriptableObject
-    /// </summary>
-    public abstract class EventScriptableObject : ScriptableObject
-    {
-        public abstract void Raise();
-    }
+	/// <summary>
+	/// Abstract class event with ScriptableObject
+	/// </summary>
+	public abstract class EventScriptableObject : ScriptableObject
+	{
+		public abstract void Raise();
+	}
 }
