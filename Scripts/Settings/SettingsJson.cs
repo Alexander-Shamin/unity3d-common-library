@@ -44,6 +44,7 @@ namespace Common
 					_jsonSerializer.Converters.Add(new Vector2JsonConverter());
 					_jsonSerializer.Converters.Add(new Vector2IntJsonConverter());
 					_jsonSerializer.Converters.Add(new Vector3JsonConverter());
+					_jsonSerializer.Converters.Add(new Vector3IntJsonConverter());
 					_jsonSerializer.Converters.Add(new StringEnumConverter());
 					return _jsonSerializer;
 				}
