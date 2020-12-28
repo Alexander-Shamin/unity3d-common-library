@@ -17,8 +17,7 @@ namespace Common
 		/// Filename for writting
 		/// </summary>
 		[SerializeField]
-		private string _filename = "settings.json";
-
+		protected string _filename = "settings.json";
 
 		/// <summary>
 		/// JsonSerializer with our converters

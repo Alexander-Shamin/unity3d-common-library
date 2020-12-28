@@ -32,6 +32,15 @@ namespace Common
 		private void OnEnable()
 		{
 			Deserialize();
+			if(_settings)
+				_settings.OnSettingsScriptableObjectChanged += _settings_OnSettingsScriptableObjectChanged; ;
+		}
+
+		private void _settings_OnSettingsScriptableObjectChanged()
+		{
+			Debug.Log("Изменения!!!!");
+			Deserialize();
+			Raise();
 		}
 
 		/// <summary>
@@ -40,6 +49,8 @@ namespace Common
 		private void OnDisable()
 		{
 			Serialize();
+			if(_settings)
+				_settings.OnSettingsScriptableObjectChanged -= _settings_OnSettingsScriptableObjectChanged; ;
 		}
 
 		/// <summary>
