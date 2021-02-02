@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Common
 {
@@ -38,7 +36,6 @@ namespace Common
 
 		private void _settings_OnSettingsScriptableObjectChanged()
 		{
-			Debug.Log("Изменения!!!!");
 			Deserialize();
 			Raise();
 		}
@@ -51,6 +48,12 @@ namespace Common
 			Serialize();
 			if(_settings)
 				_settings.OnSettingsScriptableObjectChanged -= _settings_OnSettingsScriptableObjectChanged; ;
+		}
+
+		public override void Raise()
+		{
+			Serialize();
+			base.Raise();
 		}
 
 		/// <summary>
