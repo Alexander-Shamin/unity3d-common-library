@@ -13,6 +13,7 @@ namespace Common
 			var e = target as EventScriptableObject;
 			if (GUILayout.Button("Raise a value change event"))
 				e.Raise();
+			return;
 		}
 
 	}
