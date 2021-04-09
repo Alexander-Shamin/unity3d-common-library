@@ -6,10 +6,9 @@ namespace Common
 	[CreateAssetMenu(fileName = "Event Scripatable Object", menuName = "Common/Event/Event Scriptable Object")]
     public class EventScriptableObject : ScriptableObject, IRaiseEvent
     {
-		[SerializeField]
 		private UnityEvent @event = new UnityEvent();
 
-		public void Raise()
+		public virtual void Raise()
 		{
 			@event?.Invoke();
 		}
