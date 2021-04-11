@@ -79,7 +79,6 @@ public class Singelton<T, U> : MonoBehaviour
 				//create 
 				GameObject go = new GameObject(typeof(T).Name, typeof(T));
 				instance = go.GetComponent<T>();
-				instance.Initialization();
 				if (typeof(U) == typeof(DontDestroyOnLoadEnable))
 					DontDestroyOnLoad(instance.gameObject);
 				return instance;
@@ -107,14 +106,13 @@ public class Singelton<T, U> : MonoBehaviour
 	}
 
 
-	protected void Awake()
+	protected virtual void Awake()
 	{
 		if (instance == null)
 		{
 			if (typeof(U) == typeof(DontDestroyOnLoadEnable))
 				DontDestroyOnLoad(gameObject);
 			instance = this as T;
-			Initialization();
 		}
 		else
 		{
@@ -124,10 +122,8 @@ public class Singelton<T, U> : MonoBehaviour
 		}
 	}
 
-	protected void OnDestroy() { alive = false; }
+	protected virtual void OnDestroy() { alive = false; }
 
-	protected void OnApplicationQuit() { alive = false; }
-
-	protected virtual void Initialization() { }
+	protected virtual void OnApplicationQuit() { alive = false; }
 }
 
