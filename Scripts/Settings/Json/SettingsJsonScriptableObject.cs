@@ -25,21 +25,18 @@ namespace Common
 			{
 				case TypeScopeSettings.Local:
 					if (localStorage == null)
-						localStorage = new JsonFileStorage(path, localFilename, JsonSerializer);
+						localStorage = new JsonFileStorage(Application.streamingAssetsPath, localFilename, JsonSerializer);
 					return localStorage;
 
 				default:
 				case TypeScopeSettings.Global:
 					{
 						if (globalStorage == null)
-							globalStorage = new JsonFileStorage(path, globalFilename, JsonSerializer);
+							globalStorage = new JsonFileStorage(Application.streamingAssetsPath, globalFilename, JsonSerializer);
 						return globalStorage;
 					}
 			}
 		}
-
-		[SerializeField]
-		protected string path = Application.streamingAssetsPath;
 
 		[SerializeField]
 		protected string globalFilename = "settings.json";
