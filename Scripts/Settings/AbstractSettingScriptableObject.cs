@@ -4,13 +4,20 @@ namespace Common
 {
 	/// <summary>
 	/// Абстрактный класс настроек, хранимый в виде ScriptableObject
-	/// 
+	/// </summary>
+	/// <remarks>
 	/// Для использования необходимо:
 	/// - наследоваться от данного класса;
 	/// - добавить необходимые значения;
 	/// - реализовать метод UpdateSettings(AbstractSettings s) и реализовать механизм обновления данных через s
 	/// - добавить создание через [CreateAssetMenu(fileName = "Name", menuName = "Common/Settings/Name")]
-	/// </summary>
+	/// - создать scriptableObject через меню
+	/// 
+	/// Общая логика настроек следующая:
+	/// - сохранение всех настроек в отдельном хранилище (scriptableObject)
+	/// - простой доступ из билда и editor
+	/// - при старте, проект сам читает настройки из start, плюс есть возможность среагировать на изменение настроек (каллбек)
+	/// </remarks>
 	public abstract class AbstractSettingScriptableObject : EventScriptableObject
 	{
 		[SerializeField]
@@ -67,7 +74,11 @@ namespace Common
 		private void OnValidate()
 		{
 			if (settings != null)
+			{
 				SetSettings(settings);
+				Save();
+
+			}
 		}
 	} // class
 }
