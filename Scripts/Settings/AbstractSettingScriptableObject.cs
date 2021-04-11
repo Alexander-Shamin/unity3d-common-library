@@ -77,7 +77,6 @@ namespace Common
 			{
 				SetSettings(settings);
 				Save();
-
 			}
 		}
 	} // class
