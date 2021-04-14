@@ -1,19 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
 
 namespace Common
 {
-	using BaseDictionary = Dictionary<string, dynamic>;
+	using BaseDictionary = Dictionary<string, string>;
 
 	public class JsonFileStorage
 	{
 
-		public JsonFileStorage(string path, string filename, JsonSerializer serializer)
+		public JsonFileStorage(string path, string filename, JsonSerializer serializer, JsonConverter[] converters)
 		{
 			this.path = path;
 			this.filename = filename;
 			this.serializer = serializer;
+			this.converters = converters;
 		}
 
 		public void Deserialize()
@@ -30,6 +32,8 @@ namespace Common
 		private readonly string filename;
 		private string path2file { get { return path + System.IO.Path.DirectorySeparatorChar + filename; } }
 		private readonly JsonSerializer serializer;
+
+		private readonly JsonConverter[] converters = null;
 
 
 		private BaseDictionary storage = null;
@@ -60,7 +64,7 @@ namespace Common
 			}
 			catch
 			{
-				rtrnDictionary = new Dictionary<string, dynamic>();
+				rtrnDictionary = new BaseDictionary();
 				SerializeDicitionary(rtrnDictionary, filename);
 			}
 			return rtrnDictionary;
@@ -83,5 +87,38 @@ namespace Common
 				Debug.LogException(exception);
 			}
 		}
+
+		public T GetValue<T>(string name, T defaultValue = default)
+		{
+			try
+			{
+				if (Storage.ContainsKey(name))
+					return JsonConvert.DeserializeObject<T>(Storage[name], converters);
+				else
+				{
+					SetValue<T>(name, defaultValue);
+					return defaultValue;
+				}
+			}
+			catch (InvalidCastException exception)
+			{
+				Debug.LogException(exception);
+			}
+			return defaultValue;
+		}
+
+		public void SetValue<T>(string name, T value)
+		{
+			if (Storage.ContainsKey(name))
+				Storage[name] = JsonConvert.SerializeObject(value, converters);
+			else
+				Storage.Add(name, JsonConvert.SerializeObject(value, converters));
+		}
+
+		public bool ContainstKey(string name)
+		{
+			return Storage.ContainsKey(name);
+		}
+
 	} // class 
 }
