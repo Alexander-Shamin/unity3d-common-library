@@ -20,10 +20,10 @@ namespace Common
 	[CreateAssetMenu(fileName = "SettingsJson", menuName = "Common/Settings Provider/SettingsJson")]
 	public class SettingsJsonScriptableObject : AbstractSettings
 	{
-		private JsonFileStorage localStorage = null;
-		private JsonFileStorage globalStorage = null;
+		protected JsonFileStorage localStorage = null;
+		protected JsonFileStorage globalStorage = null;
 
-		private JsonFileStorage GetStorage(TypeScopeSettings scope)
+		protected JsonFileStorage GetStorage(TypeScopeSettings scope)
 		{
 			switch (scope)
 			{
@@ -44,7 +44,7 @@ namespace Common
 
 		[SerializeField]
 		private bool? _dominationLocalStorage = null;
-		private bool DominationLocalStorage
+		protected bool DominationLocalStorage
 		{
 			get
 			{
