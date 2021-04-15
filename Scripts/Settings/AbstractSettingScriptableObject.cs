@@ -39,7 +39,7 @@ namespace Common
 			if (settings != null)
 			{
 				settings.OnSettingsChanged += AbstractSettings_OnSettingsChanged;
-				settings?.Load();
+				settings?.Load(this);
 			}
 		}
 
@@ -52,9 +52,10 @@ namespace Common
 			}
 		}
 
-		private void AbstractSettings_OnSettingsChanged()
+		// У нас инверсия считывания данных при старте, чтобы не было множество лишних вызвов, добавил caller
+		private void AbstractSettings_OnSettingsChanged(AbstractSettingScriptableObject caller)
 		{
-			if (settings != null)
+			if (caller == null || caller == this)
 			{
 				GetSettings(settings);
 				Raise();

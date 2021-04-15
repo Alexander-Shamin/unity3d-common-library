@@ -122,12 +122,12 @@ namespace Common
 			GetStorage(scope).SetValue(name, value);
 		}
 
-		public override void Load()
+		public override void Load(AbstractSettingScriptableObject caller = null)
 		{
 			GetStorage(TypeScopeSettings.Local).Deserialize();
 			GetStorage(TypeScopeSettings.Global).Deserialize();
 			_dominationLocalStorage = GetValue<bool>("dominationLocalSettings", false, scope: TypeScopeSettings.Local);
-			InvokeOnSettingsChanged();
+			InvokeOnSettingsChanged(caller);
 		}
 
 

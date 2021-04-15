@@ -15,10 +15,10 @@ namespace Common
 	/// </remarks>
 	public abstract class AbstractSettings : ScriptableObject
 	{
-		public event UnityAction OnSettingsChanged;
-		protected void InvokeOnSettingsChanged()
+		public event UnityAction<AbstractSettingScriptableObject> OnSettingsChanged;
+		protected void InvokeOnSettingsChanged(AbstractSettingScriptableObject caller = null)
 		{
-			OnSettingsChanged?.Invoke();
+			OnSettingsChanged?.Invoke(caller);
 		}
 
 		public abstract T GetValue<T>(string name, T defaultValue = default, TypeScopeSettings scope = TypeScopeSettings.Global);
@@ -34,6 +34,6 @@ namespace Common
 		}
 
 		public abstract void Save();
-		public abstract void Load();
+		public abstract void Load(AbstractSettingScriptableObject caller = null);
 	} // class
 }
