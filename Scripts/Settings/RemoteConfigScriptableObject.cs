@@ -95,9 +95,9 @@ namespace Common
 			ConfigManager.SetCustomUserID("none");
 			var attr = new appAttributes()
 			{
-				customerInformation = GetStorage(TypeScopeSettings.Local).GetValue("customerInformation", "none"),
-				locationInformation = GetStorage(TypeScopeSettings.Local).GetValue("locationInformation", "none"),
-				versionInformation = GetStorage(TypeScopeSettings.Local).GetValue("versionInformation", "none"),
+				customerInformation = GetStorage(TypeScopeSettings.Local).GetValue("CustomerInformation", "none"),
+				locationInformation = GetStorage(TypeScopeSettings.Local).GetValue("LocationInformation", "none"),
+				versionInformation = GetStorage(TypeScopeSettings.Local).GetValue("VersionInformation", "none"),
 			};
 			ConfigManager.FetchConfigs<userAttributes, appAttributes>(new userAttributes(), attr);
 		}
