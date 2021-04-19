@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using Unity.RemoteConfig;
+using System.Text.RegularExpressions;
 
 namespace Common
 {
@@ -56,30 +57,30 @@ namespace Common
 				switch (configResponse.requestOrigin)
 				{
 					case ConfigOrigin.Remote:
+					{
+						var storage = GetStorage(TypeScopeSettings.Global).Storage;
+						int updatedValue = 0;
+
+						foreach (var name in ConfigManager.appConfig.GetKeys())
 						{
-							var storage = GetStorage(TypeScopeSettings.Global).Storage;
-							List<string> namesMap = new List<string>();
-
-							foreach (var name in storage.Keys)
-								if (ConfigManager.appConfig.HasKey(name))
-									namesMap.Add(name);
-
-							int updatedValue = 0;
-							foreach (var name in namesMap)
+							if (storage.ContainsKey(name))
 							{
-								if (storage[name] != ConfigManager.appConfig.GetJson(name))
+								string value = ConfigManager.appConfig.GetJson(name);
+								if (storage[name] != value)
 								{
-									storage[name] = ConfigManager.appConfig.GetJson(name);
+									storage[name] = value;
 									updatedValue++;
 								}
 							}
-
-							if (updatedValue != 0)
-								InvokeOnSettingsChanged();
-
-							OnSettingsUpdateSuccessfully?.Invoke(true);
-							break;
 						}
+						if (updatedValue != 0)
+						{
+							InvokeOnSettingsChanged();
+						}
+
+						OnSettingsUpdateSuccessfully?.Invoke(true);
+						break;
+					}
 				}
 			}
 			else
