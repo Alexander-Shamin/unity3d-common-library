@@ -64,7 +64,11 @@ namespace Common
 
 		public void Save()
 		{
-			settings?.Save();
+			if (settings != null)
+			{
+				SetSettings(settings);
+				settings?.Save();
+			}
 		}
 
 		public void Load()
