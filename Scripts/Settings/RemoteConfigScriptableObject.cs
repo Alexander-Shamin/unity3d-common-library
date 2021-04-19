@@ -9,7 +9,7 @@ namespace Common
 	/// <summary>
 	/// Реализация системы доступа к удаленным настройкам, с реализацией кеш данных в json файлах
 	/// </summary>
-	public class RemoteConfigScriptableObject : SettingsJsonWatcherScriptableObject
+	public class RemoteConfigScriptableObject : SettingsJsonScriptableObject
 	{
 		public UnityAction<bool> OnSettingsUpdateSuccessfully;
 
