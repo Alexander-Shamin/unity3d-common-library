@@ -85,7 +85,7 @@ namespace Common
 			}
 			else
 			{
-				Debug.LogError($"Error response remote settings = {configResponse.status}");
+				Debug.LogWarning($"Error response remote settings = {configResponse.status}");
 				OnSettingsUpdateSuccessfully?.Invoke(false);
 			}
 		}
