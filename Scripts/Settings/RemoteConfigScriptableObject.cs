@@ -98,7 +98,7 @@ namespace Common
 			{
 				customerInformation = GetStorage(TypeScopeSettings.Local).GetValue("CustomerInformation", "none"),
 				locationInformation = GetStorage(TypeScopeSettings.Local).GetValue("LocationInformation", "none"),
-				versionInformation = GetStorage(TypeScopeSettings.Local).GetValue("VersionInformation", "none"),
+				versionInformation = GetStorage(TypeScopeSettings.Global).GetValue("VersionInformation", "none"),
 			};
 			ConfigManager.FetchConfigs<userAttributes, appAttributes>(new userAttributes(), attr);
 		}
