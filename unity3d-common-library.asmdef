@@ -15,7 +15,7 @@
     "versionDefines": [
         {
             "name": "com.unity.remote-config-runtime",
-            "expression": "2.0",
+            "expression": "1.0.0",
             "define": "USE_REMOTE_CONFIG"
         }
     ],

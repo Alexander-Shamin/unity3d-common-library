@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace Common
 {
+#if USE_REMOTE_CONFIG
 	[CreateAssetMenu(fileName = "SettingsRemoteConfigJson", menuName = "Common/Settings Provider/SettingsRemoteConfigJson")]
 	/// <summary>
 	/// Реализация системы доступа к удаленным настройкам, с реализацией кеш данных в json файлах
@@ -104,4 +105,5 @@ namespace Common
 		}
 
 	} // class
+#endif
 }

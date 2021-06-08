@@ -3,6 +3,7 @@ using UnityEngine.Assertions;
 
 namespace Common
 {
+#if USE_REMOTE_CONFIG
 	public class RemoteConfigUpdater : Singelton<RemoteConfigUpdater, DontDestroyOnLoadEnable>
 	{
 		[SerializeField]
@@ -21,4 +22,5 @@ namespace Common
 			_rc?.FetchRemoteSettings();
 		}
 	} // class
+#endif
 }
