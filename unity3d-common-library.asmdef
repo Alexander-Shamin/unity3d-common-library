@@ -1,0 +1,23 @@
+{
+    "name": "unity3d-common-library",
+    "references": [
+        "GUID:9d6c7830d9ab746a7a12f144bdeeee7c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.remote-config-runtime",
+            "expression": "2.0",
+            "define": "USE_REMOTE_CONFIG"
+        }
+    ],
+    "noEngineReferences": false
+}
