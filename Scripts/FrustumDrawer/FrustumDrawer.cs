@@ -1,34 +1,37 @@
 using UnityEngine;
 
-[ExecuteInEditMode]
-public class FrustumDrawer : MonoBehaviour
+namespace Common
 {
-	[SerializeField] private Camera cameraComponent;
-
-	[SerializeField] private Color color = Color.cyan;
-
-	[SerializeField] private bool isDrawingGizmos = false;
-
-	private void Awake()
+	[ExecuteInEditMode]
+	public class FrustumDrawer : MonoBehaviour
 	{
-		if (cameraComponent == null)
+		[SerializeField] private Camera cameraComponent;
+
+		[SerializeField] private Color color = Color.cyan;
+
+		[SerializeField] private bool isDrawingGizmos = false;
+
+		private void Awake()
 		{
-			cameraComponent = gameObject.GetComponent<Camera>();
+			if (cameraComponent == null)
+			{
+				cameraComponent = gameObject.GetComponent<Camera>();
+			}
 		}
-	}
 
-	private void OnDrawGizmos()
-	{
-		if (cameraComponent != null && isDrawingGizmos)
+		private void OnDrawGizmos()
 		{
-			Gizmos.matrix = cameraComponent.transform.localToWorldMatrix;
-			Gizmos.color = color;
-			Gizmos.DrawFrustum(
-				Vector3.zero,
-				cameraComponent.fieldOfView,
-				cameraComponent.farClipPlane,
-				cameraComponent.nearClipPlane,
-				cameraComponent.sensorSize.x / cameraComponent.sensorSize.y);
+			if (cameraComponent != null && isDrawingGizmos)
+			{
+				Gizmos.matrix = cameraComponent.transform.localToWorldMatrix;
+				Gizmos.color = color;
+				Gizmos.DrawFrustum(
+					Vector3.zero,
+					cameraComponent.fieldOfView,
+					cameraComponent.farClipPlane,
+					cameraComponent.nearClipPlane,
+					cameraComponent.sensorSize.x / cameraComponent.sensorSize.y);
+			}
 		}
 	}
 }
