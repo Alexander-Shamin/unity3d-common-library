@@ -1,68 +1,49 @@
 # Settings
-Система настроек состоит из следующих составных частей:
-* `AbstractSettings` - абстрактный класс для доступа к хранилищу настроек. Текущие реализации:
-	* `SettingsJsonScriptableObject`
-	* `SettingsJsonWatcherScriptableObject`
-	* `RemoteConfigScriptableObject`
-* `AbstractSettingsScriptableObject` - абстрактный класс для реализации настроек в виде отдельного ScriptableObject
 
-Для создания своих настроек, необходимо наследоваться от класса `AbstractSettingsScriptableObject`, добавить необходимые члены класса, а также реализовать абстрактные методы `SetSettings`, `GetSettings`. Данные методы регулируют, какие данные необходимо обновлять.
-
-Все настройки хранятся в директории **StreamingAssets**.
-
-# Система пределов настроек (scope)
-Для управления реализации гибкого управления настройками была реализована система сфер влияния или пределов видимости настроек. Суть в том, что для каждой настройки можно добавить область ее действия - глобальная (на всех приложениях) или локальная (только для этого приложения). По-умолчанию применяется глобальная область действия.
-
-Если возникнет желание на конкретной машине включить отдельную фичу или настроaку, то для этого нужно:
-* `dominationLocalSettings` - в файле `local_settings.json` изменить на **true** (теперь система будет искать в локальном хранилище, а затем в глобальном)
-* добавить необходимую настройку в файл `local_settings.json` (как правило из `settings.json`)
-
-# AbstractSettings
-Реализация хранения осуществляется отдельными классами, реализующими интерфейс `AbstractSettings`. 
-Подробнее о реализации:
-* `SettingsJsonScriptableObject` - реализация в виде хранилища Json (файл). 
-* `SettingsJsonWatcherScriptableObject` - расширение json хранилища, реагирует на внешние изменения файла и обновляет настройки в проекте
-* `RemoteConfigScriptableObject` - расширение над `SettingsJsonWatcherScriptableObject`, реализующее управление через модуль `RemoteConfig`. Подробнее в соответствующем разделе.
+# Общие сведения
+Настройка приложения осуществляется в Unity Editor. Обращение напрямую к файлам конфигурации допускается только в при работе в релизных версиях. Конфигурация осуществляется в ScriptableObject и RemoteConfig windows.
 
 
-# remote config
-Для работы необходим Project Id - его можно получить, зарегистрировав проект в Collab.
+# Области видимости
+В системе 3 области видимости настроек (`SettingScope`):
++ local: настройки, которые должны хранится только на данной машине. Место хранения `local_settings.json`
++ global: настройки, которые являются общими для всех реализаций. Место хранения `settings.json`
++ remote: настройки, которые являются общими для всех реализаций. Место хранения `RemoteConfig`
 
-Для полноценного использования данный функционал представлен в виде 2-х объектов:
-* `RemoteConfigScriptableObject` - базовый класс, реализующий систему событый и подписок. Однократно запрашивает данные с сервера при старте приложения.
-* `RemoteConfigUpdater` - дополнительный класс, вызывающий обновление данных с заданной периодичностью.
+В локальных настройках существует флаг `dominationLocalSettings`, если он установлен в `true` система ищет настройки сначала в локальных настройках, затем в глобальных. 
 
-Принцип действия:
-Приложение при старте инициализирует свои настройки через `SettingJsonScriptableObject`, затем обращается на сервер, для запроса новых данных. Если в новых данных содержится отличие от имеющихся - они заменяются и высылается событие обновления данных. В завершении события получения данных от сервера высылается событие `OnSettingsUpdateSuccessufully(true/false)`.
+Приоритет применения настроек: remote -> global -> local
+Следует учитывать, что удаленные настройки могут быть доступны не всегда, поэтому любые данные, пришедщие из этого источника принудительно записываются в global хранилище. Флаг `dominationLocalSettings` меняет приоритет следующим образом: local -> global == remote.
 
-Для реализации обновления данных в процессе работы приложения необходимо добавить `RemoteConfigUpdater` в любую часть проекта (синглтон) и добавить зависимости.
+# Использование системы конфигурации разработчиком
 
-Для перестройки проекта, необходимо производить подписку на соответствующие настройки. Все зависимости от настроек необходимо проводить прямым путем.
+Все неоходимые данные хранятся в `ScriptableObject`. Каждый класс хранения данных создается с наследованием от `AbstractSettingSO`. При наследовании необходимо реализовать 3 метода (пример ниже):
+- `GetSettings` - автоматический доступ к данным, хранимым в хранилищах настроек
+- `SetSettings` - автоматическая запись данных в хранилище настроек
+- `InvokeOnSettingsChanged` - метод для добавления в интерфейс кнопки отправки события
+``` cs
 
-# управление настройками приложения
-В зависимости от используемого поставщика настроек:
-* `SettingsJsonScriptableObject` и `SettingsJsonWatcherScriptableObject`:
-	* **Editor**: управляем через созданный ScriptableObject
-	* **Build**: управляем через json файл (локальный или глобальный)
-* `RemoteConfigScriptableObject`:
-	* **Editor**: управляем **Remote Config** с помощью правил и настроек. Подробнее в отдельном разделе
-	* **Build**: управляем через локальный json файл и через управление настройками в Unity Collab
+	protected override bool GetSettings(AbstractSettingsStorageSO s)
+	{
+		bool somethingChanged = false;
+		somethingChanged |= s.GetValueAndCheck(nameof(LightIntensity), ref LightIntensity LightIntensity, SettingPolicy.Local);
 
-**ВАЖНО!** Каждый раз лазить в Remote Config для изменения настроек неудобно (учитывая, как приходится хранить там данные). На объекте `RemoteConfigScriptableObject` реализован флаг, который позволяет отключить удаленное обновление настроек. При этом будет выводиться сообщение об отключении удаленного обновления. Данный функционал реализован для удобства разработчиков.
+		somethingChanged |= s.GetValueAndCheck(nameof(CustomerInformation), ref CustomerInformation, CustomerInformation, SettingPolicy.Local);
 
-# хранение и редактирование настроек Remote Config
-Для общей интеграции настройки хранятся в виде Json значений. Для их добавления удобно скопировать их из файла .json. Необходимо убрать лишний `\` -> особенность хранения. 
+		somethingChanged |= s.GetValueAndCheck(nameof(LocationInformation), ref LocationInformation, LocationInformation, SettingPolicy.Local);
 
-В локальных настройках появляются новые поля:
-* `customerInformation` - информация о клиенте
-* `locationInformation` - информация о месте установки
-* `versionInformation` - информация о версии ПО
+		somethingChanged |= s.GetValueAndCheck(nameof(VersionInformation), ref VersionInformation, VersionInformation, SettingPolicy.Global);
+		return somethingChanged;
+	}
 
-Данные поля используются для написания правил (condition) управления удаленными настройками. Можно реализовать свод правил, которые будет доставлять данные каждой конкретной единице, основываясь на вышеописанных полях. 
+	protected override void SetSettings(AbstractSettingsStorageSO s)
+	{
+		s.SetValue(nameof(LightIntensity), LightIntensity, scope: SettingPolicy.Local);
+		s.SetValue(nameof(CustomerInformation), CustomerInformation, scope: SettingPolicy.Local);
+		s.SetValue(nameof(LocationInformation), LocationInformation, scope: SettingPolicy.Local);
+		s.SetValue(nameof(VersionInformation), VersionInformation, scope: SettingPolicy.Global);
+	}
 
+	public override void InvokeOnSettingsChanged() { InvokeOnSettingsChanged(this); }
+```
 
-
-# для разработчика
-* unity scriptable object огроная проблема - если создать более 2х объектов, то unity неправильно вызывает события. Лучше отказаться от них. А еще лучше от Unity
-* по факту инверсия управления сделана для обхода вышеуказанной проблемы - но можно смело уходить в monobehaviour.
-* можно сильно все упростить - если применять стандратные события с обработчиком

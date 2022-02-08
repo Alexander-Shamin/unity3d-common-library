@@ -1,14 +1,12 @@
 ﻿namespace Common
 {
-	public enum MessagePriority
-	{
-		Informational,
-		Lowest,
-		Normal,
-		Highest,
-		Critical,
-		Error
-	}
+public enum MessagePriority 
+{
+	Critical = 1, 
+	Error = 2,
+	Highest = 3, 
+	Normal = 4, 
+	Lowest = 5, 
+	Informational = 6
 }
-
-
+}

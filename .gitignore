@@ -1,3 +1,10 @@
 # meta files
 *.md.meta
 
+
+# dia files
+*.dia.autosave
+*.dia.autosave.meta
+
+
+
