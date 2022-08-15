@@ -1,10 +1,16 @@
-# meta files
-*.md.meta
-
-
 # dia files
 *.dia.autosave
 *.dia.autosave.meta
 
+Library/
+Logs/
+Temp/
+UserSettings/
+obj/
+
+/.vs/
+.vsconfig
+*.csproj
+*.sln
 
 
